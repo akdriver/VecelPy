@@ -2,9 +2,10 @@ import time
 import requests
 import re
 import os
+import threading
 
 # 设置网址和Telegram API的token、chat_id
-url = os.environ.get('URL', '')
+url = os.environ.get('URL', 'https://')
 telegram_bot_token = os.environ.get('TELE_TOKEN', '')
 chat_id = os.environ.get('CHAT_ID', '')
 
@@ -41,14 +42,16 @@ def send_telegram_message(account_count):
     except requests.RequestException as e:
         print(f"发送Telegram消息出错: {e}")
 
-
-# 定时任务，每12小时执行一次
-while True:
+def my_task():
     account_count = get_account_count()
     if account_count:
         send_telegram_message(account_count)
     else:
         print("未能获取到账户数量，检查页面结构是否更改")
 
-    # 等待12小时（43200秒）
-    time.sleep(43200)
+def start_timer(interval):
+    my_task()
+    threading.Timer(interval, start_timer, [interval]).start()
+
+if __name__ == '__main__':
+    start_timer(3600)
