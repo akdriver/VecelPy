@@ -1,11 +1,12 @@
 import time
 import requests
 import re
+import os
 
 # 设置网址和Telegram API的token、chat_id
-url = ${URL}
-telegram_bot_token = ${TELE_TOKEN}
-chat_id = ${CHAT_ID}
+url = os.environ.get('URL', '')
+telegram_bot_token = os.environ.get('TELE_TOKEN', '')
+chat_id = os.environ.get('CHAT_ID', '')
 
 
 def get_account_count():
